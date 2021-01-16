@@ -17,6 +17,24 @@ __pycache__/
 
 static/
 posts/static/
+sent_emails/
 media/
 
+.vscode/
+
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover 
+
 db.sqlite3
+
+{
+    "python.pythonPath": "d:\\Dev\\hw03_forms\\venv\\Scripts\\python.exe",
+    "python.linting.pylintEnabled": false,
+    "python.linting.flake8Enabled": true,
+    "python.linting.enabled": true
+}
+
+
