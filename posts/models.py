@@ -31,16 +31,19 @@ class Post(models.Model):
     class Meta:
         ordering = ['-pub_date']
 
+
 class Comment(models.Model):
-    post = models.ForeignKey(Post, blank=False, null=False,
+    post = models.ForeignKey(Post,
                              on_delete=models.CASCADE,
                              related_name='comments',)
-    author = models.ForeignKey(User, blank=False, null=False,
+    author = models.ForeignKey(User,
                                on_delete=models.CASCADE,
                                related_name='comments')
     text = models.TextField(blank=False, null=False,
+                            verbose_name='Комментарий',
                             help_text='Ваш комментарий')
     created = models.DateTimeField(auto_now_add=True)  
+
 
 class Follow(models.Model):
     user = models.ForeignKey(User, 
@@ -56,3 +59,8 @@ class Follow(models.Model):
     class Meta:
         verbose_name = "Подписка"
         verbose_name_plural = "Подписки"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "author"], name="unique_follow"
+            )
+        ]

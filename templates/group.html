@@ -8,7 +8,7 @@
             <!-- Вывод ленты записей -->
                 {% for post in page %}
                   <!-- Вот он, новый include! -->
-                    {% include "post_item.html" with post=post %}
+                    {% include "includes/post_item.html" with post=post %}
                 {% endfor %}
     </div>
 

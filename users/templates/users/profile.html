@@ -1,68 +1,35 @@
 {% extends "base.html" %}
-{% block title %}Страница пользователя {{ author.get_full_name }}{% endblock %}
-{% block header %}Последние обновления на сайте{% endblock %}
+{% block title %} Страница пользователя {{ author.get_full_name }} {% endblock %}
+{% block header %}<h1 class="text-center">Страница пользователя<br>
+        {{ author.get_full_name }}</h1>  
+{% endblock %}
 {% block content %}
-
-<main role="main" class="container">
-    <div class="row">
+    <main role="main" class="container">
+        <div class="row">
             <div class="col-md-3 mb-3 mt-1">
-                
-                    <div class="card">
-                            <div class="card-body">
-                                    <div class="h2">
-                                        
-                                        {{ author.get_full_name }}
-                                    </div>
-                                    <div class="h3 text-muted">
-                                         
-                                         {{ author }}
-                                    </div>
-                            </div>
-                            <ul class="list-group list-group-flush">
-                                    <li class="list-group-item">
-                                            <div class="h6 text-muted">
-                                            Подписчиков: XXX <br />
-                                            Подписан: XXX
-                                            </div>
-                                    </li>
-                                    <li class="list-group-item">
-                                        
-                                            <div class="h6 text-muted">
-                                                
-                                                Записей: {{ post_count }}
-
-                                            </div>
-                                            <li class="list-group-item">
-                                                {% if following %}
-                                                <a class="btn btn-lg btn-light" 
-                                                        href="{% url 'profile_unfollow' author.username %}" role="button"> 
-                                                        Отписаться 
-                                                </a> 
-                                                {% else %}
-                                                <a class="btn btn-lg btn-primary" 
-                                                        href="{% url 'profile_follow' author.username %}" role="button">
-                                                Подписаться 
-                                                </a>
-                                                {% endif %}
-                                            </li>
-                                    </li>
-                            </ul>
-                    </div>
-            </div>
-            <div class="col-md-9">
-            <div class="container">
+                <div class="card">
                     
-                     {% for post in page %}
-                         {% include "post_item.html" with post=post %}
-                     {% endfor %}
+                    {% include "includes/profilecard.html" %}
+                    
+                    {% if request.user != author %}
+                        <li class="list-group-item">
+                            {% include "includes/following.html" %}
+                        </li>
+                    {% endif %}
+                    </ul>
+                </div>
             </div>
-     
-             {% if page.has_other_pages %}
-                 {% include "paginator.html" with items=page paginator=paginator%}
-             {% endif %}
 
+            <div class="col-md-9">
+
+                <!-- Вывод ленты записей -->
+                {% for post in page %}
+                    {% include "includes/post_item.html" with post=post %}
+                {% endfor %}
+
+                <!-- Здесь постраничная навигация паджинатора -->
+                {% include "paginator.html" %}
+            </div>
         </div>
-    </div>
-</main> 
-
+    </main>
 {% endblock %}
