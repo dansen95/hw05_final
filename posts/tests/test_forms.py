@@ -34,10 +34,6 @@ class PostCreateFormTests(TestCase):
     
     @classmethod
     def tearDownClass(cls):
-        # Модуль shutil - библиотека Python с прекрасными инструментами 
-        # для управления файлами и директориями: 
-        # создание, удаление, копирование, перемещение, изменение папок и файлов
-        # Метод shutil.rmtree удаляет директорию и всё её содержимое
         shutil.rmtree(settings.MEDIA_ROOT, ignore_errors=True)
         super().tearDownClass()
 
@@ -75,36 +71,31 @@ class PostCreateFormTests(TestCase):
             follow=True,
         )
 
-        #Проверяем редирект.
         self.assertRedirects(response, '/')
 
-        #Проверяем, увеличилось ли число постов.
         self.assertEqual(Post.objects.count(), posts_count +1 )
 
-        #Проверяем, что создалась запись с нашим текстом и картинкой.
-        self.assertTrue(Post.objects.filter(text='Какой-то длинный, интересный текст').exists())
+        self.assertTrue(Post.objects.filter(
+            text='Какой-то длинный, интересный текст').exists())
         self.assertTrue(Post.objects.filter(image='posts/small.gif').exists())
 
     def test_post_edit_create_post_end_redirect(self):
         """Валидная форма редактирует запись в Post."""
         form_data = {
-        'group': PostCreateFormTests.group.id,
-        'text': "Новый текст",
+            'group': PostCreateFormTests.group.id,
+            'text': "Новый текст",
         }
 
         response = self.authorized_client.post(
-        reverse('post_edit', kwargs={'username': PostCreateFormTests.user,
+            reverse('post_edit', kwargs={'username': PostCreateFormTests.user,
                                     'post_id': PostCreateFormTests.post.id}),
-        data=form_data, follow=True)
-    
-        #Страница new_post.html отвечает.
+                                     data=form_data, follow=True)
+
         self.assertEqual(response.status_code, 200)
 
-        #Пост Изменился.
         PostCreateFormTests.post.refresh_from_db()
         self.assertEqual(PostCreateFormTests.post.text, form_data['text'])
 
-        #Проверяем редирект.
         self.assertRedirects(
             response,
             reverse('post', 
@@ -112,7 +103,6 @@ class PostCreateFormTests(TestCase):
             'post_id': PostCreateFormTests.post.id})
         )
 
-        #Проверяем, что создалась запись с нашим текстом.
         self.assertTrue(Post.objects.filter(text='Новый текст').exists())
 
     def test_invalid_form_does_not_create_post(self):
@@ -129,13 +119,8 @@ class PostCreateFormTests(TestCase):
             follow=True,
         )
 
-        # Убедимся, что запись в базе данных не создалась: 
-        # сравним количество записей в Post до и после отправки формы.
         self.assertEqual(Post.objects.count(), posts_count)
 
-        # Проверим, что форма вернула ошибку с ожидаемым текстом:
-        # из объекта responce берём словарь 'form', 
-        # указываем ожидаемую ошибку для поля 'text' этого словаря.
         self.assertFormError(
             response, 'form', 'text', 'Обязательное поле.'
         )

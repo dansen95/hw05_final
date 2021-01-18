@@ -86,3 +86,4 @@ class ModelsTest(TestCase):
         post_group = ModelsTest.group
         expected_object_name = post_group.title
         self.assertEquals(expected_object_name, str(post_group))
+        

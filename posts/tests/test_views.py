@@ -96,7 +96,7 @@ class PostViewsTest(TestCase):
             'default': {
                 'BACKEND': 'django.core.cache.backends.dummy.DummyCache'}
             }
-        )            
+    )            
     def test_home_page_show_correct_context(self):
         """Шаблон home сформирован с правильным контекстом."""
         response = self.authorized_client.get(reverse('index'))
@@ -113,7 +113,7 @@ class PostViewsTest(TestCase):
             'default': {
                 'BACKEND': 'django.core.cache.backends.dummy.DummyCache'}
             }
-        )
+    )
     def test_second_page_of_index(self):
         """Проверка второй страницы шаблона index."""
         response = self.client.get(reverse('index') + '?page=2')
@@ -217,8 +217,8 @@ class PostViewsTest(TestCase):
         """Тестируем cache"""
         index_1 = self.client.get(reverse('index'))
         Post.objects.create(
-                text='Test-cache',
-                author=PostViewsTest.user
+            text='Test-cache',
+            author=PostViewsTest.user
         )
         index_2 = self.client.get(reverse('index'))
         self.assertHTMLEqual(str(index_1.content), str(index_2.content))
@@ -251,34 +251,33 @@ class PostViewsTest(TestCase):
         self.authorized_client.get(
             reverse("profile_follow",
                     kwargs={"username": self.user_1.username}))
-        self.authorized_client_1.post(
-            reverse("new_post"),
-            {"text": "Текст поста",
-             "group": PostViewsTest.group.id
-             }
+        Post.objects.create( 
+            text='Текст поста', 
+            author=self.user_1, 
+            group=PostViewsTest.group,  
         )
         response = self.authorized_client.get(reverse("follow_index"))
-        self.assertContains(
-            response, "Текст поста")
+        self.assertEqual(response.context.get('page').object_list, 
+                        list(PostViewsTest.user_1.posts.all()[:10]))
 
     def test_view_post_without_follow(self):
         """Запись не появляется в ленте подписчиков"""
-        self.authorized_client_1.post(
-            reverse("new_post"),
-            {"text": "Текст поста",
-             "group": PostViewsTest.group.id
-             }
+        Post.objects.create( 
+            text='Текст поста', 
+            author=self.user, 
+            group=PostViewsTest.group,  
         )
         response = self.authorized_client_1.get(reverse("follow_index"))
-        self.assertNotContains(
-            response, "Текст поста")
+        self.assertNotEqual(response.context.get('page').object_list, 
+                        list(PostViewsTest.user.posts.all()[:10]))
 
     def test_authorized_user_may_add_comment(self):
         """authorized_client может комментировать"""
         post = Post.objects.create(author=self.user, text="Текст поста")
         response = self.authorized_client.post(
             reverse("add_comment", args=[self.user.username, post.id]),
-            {"text": "Текст комментария"}, follow=True)
+            {"text": "Текст комментария"}, follow=True
+        )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Comment.objects.count(), 1)
 
@@ -287,6 +286,7 @@ class PostViewsTest(TestCase):
         post = Post.objects.create(author=self.user, text="Текст поста")
         response = self.guest_client.post(
             reverse("add_comment", args=[self.user.username, post.id]),
-            {"text": "Текст комментария"}, follow=True)
+            {"text": "Текст комментария"}, follow=True
+        )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Comment.objects.count(), 0)
