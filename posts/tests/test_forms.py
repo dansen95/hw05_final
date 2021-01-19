@@ -1,9 +1,10 @@
 import os
 import shutil
 import tempfile
+
 from django.conf import settings
-from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth import get_user_model
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase
 from django.urls import reverse
 
@@ -88,8 +89,9 @@ class PostCreateFormTests(TestCase):
 
         response = self.authorized_client.post(
             reverse('post_edit', kwargs={'username': PostCreateFormTests.user,
-                                    'post_id': PostCreateFormTests.post.id}),
-                                     data=form_data, follow=True)
+                                         'post_id': PostCreateFormTests.post.id}),
+                                         data=form_data, follow=True
+        )
 
         self.assertEqual(response.status_code, 200)
 
@@ -100,7 +102,8 @@ class PostCreateFormTests(TestCase):
             response,
             reverse('post', 
             kwargs={'username': PostCreateFormTests.user,
-            'post_id': PostCreateFormTests.post.id})
+                    'post_id': PostCreateFormTests.post.id}
+            )
         )
 
         self.assertTrue(Post.objects.filter(text='Новый текст').exists())
@@ -108,7 +111,7 @@ class PostCreateFormTests(TestCase):
     def test_invalid_form_does_not_create_post(self):
         """Невалидная форма не создает в базе данных пост."""
         posts_count = Post.objects.count() 
-        form_data = form_data = {
+        form_data = {
             'text': '',
             'group': PostCreateFormTests.group.id,
         }

@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
-from django.urls import reverse
 
 from posts.models import Group, Post
 
@@ -61,8 +60,11 @@ class PostURLTest(TestCase):
         response = self.guest_client.get('/')
         self.assertEqual(response.status_code, 200)
 
-    def test_post_group_slug_url_exists_at_desired_location_for_auth_user(self):
-        """Страница /group/test_slug/ доступна авторизированному пользователю."""
+    def test_group_slug_url_exists_at_desired_location_for_auth_user(self):
+        """Страница /group/test_slug/ доступна авторизированному 
+        пользователю.
+        
+        """
         response = self.authorized_client_author.get('/group/test_slug')
         self.assertEqual(response.status_code, 200)
 
@@ -79,7 +81,7 @@ class PostURLTest(TestCase):
     def test_post_new_url_does_not_exist_at_desired_location_for_guest(self):
         """Страница /new/ недоступна любому пользователю."""
         response = self.guest_client.get('/new/',
-                                        follow=True)
+                                         follow=True)
         self.assertRedirects(response, ('/auth/login/?next=/new/'))
 
     def test_username_for_guest(self):
@@ -105,12 +107,14 @@ class PostURLTest(TestCase):
     def test_username_post_id_edit_for_guest(self):
         """Страница '/author/1/edit/' недоступна любому пользователю."""
         response = self.guest_client.get('/author/1/edit/',
-                                                follow=True)
+                                         follow=True)
         self.assertRedirects(response, ('/auth/login/?next=/author/1/edit/'))
 
     def test_username_post_id_edit_for_auth_user_post_author(self):
-        """Страница '/author/1/edit/' доступна
-        авторизованному пользователю, автору поста."""
+        """Страница '/author/1/edit/' доступна авторизованному пользователю,
+        автору поста.
+        
+        """
         response = self.authorized_client_author.get('/author/1/edit/')
         self.assertEqual(response.status_code, 200)
 
@@ -132,7 +136,8 @@ class PostURLTest(TestCase):
         """Тест редиректа со страницы '/author/1/edit/' 
         на страницу /author/1/ для авторизованного пользователя."""
         response = self.authorized_client_not_author.get('/author/1/edit/',
-                                                follow=True)
+                                                         follow=True
+        )
         self.assertRedirects(
             response, ('/author/1/')) 
 
@@ -140,3 +145,4 @@ class PostURLTest(TestCase):
         """Тест ошибки сервера 404 для несуществующей страницы"""
         response = self.guest_client.get('/false_page/')
         self.assertEqual(response.status_code, 404)
+        

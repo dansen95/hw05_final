@@ -37,7 +37,8 @@ class ModelsTest(TestCase):
         for value, expected in field_verboses.items():
             with self.subTest(value=value):
                 self.assertEqual(
-                    post_model._meta.get_field(value).verbose_name, expected)
+                    post_model._meta.get_field(value).verbose_name, expected
+                )
 
     def test_help_text_post(self):
         """help_text в полях совпадает с ожидаемым."""
@@ -49,7 +50,8 @@ class ModelsTest(TestCase):
         for value, expected in field_help_texts.items():
             with self.subTest(value=value):
                 self.assertEqual(
-                    post_model._meta.get_field(value).help_text, expected)
+                    post_model._meta.get_field(value).help_text, expected
+                )
 
     def test_object_name_is_text_field_post(self):
         """__str__  post_model - это строчка с содержимым post."""
@@ -67,7 +69,8 @@ class ModelsTest(TestCase):
         for value, expected in field_verboses.items():
             with self.subTest(value=value):
                 self.assertEqual(
-                    post_group._meta.get_field(value).verbose_name, expected)
+                    post_group._meta.get_field(value).verbose_name, expected
+                )
 
     def test_help_text_group(self):
         """help_text в полях совпадает с ожидаемым."""
@@ -79,7 +82,8 @@ class ModelsTest(TestCase):
         for value, expected in field_help_texts.items():
             with self.subTest(value=value):
                 self.assertEqual(
-                    post_group._meta.get_field(value).help_text, expected)
+                    post_group._meta.get_field(value).help_text, expected
+                )
         
     def test_object_name_is_title_field_group(self):
         """__str__  post_group - это строчка с содержимым group."""
