@@ -63,7 +63,6 @@ class PostURLTest(TestCase):
     def test_group_slug_url_exists_at_desired_location_for_auth_user(self):
         """Страница /group/test_slug/ доступна авторизированному 
         пользователю.
-        
         """
         response = self.authorized_client_author.get('/group/test_slug')
         self.assertEqual(response.status_code, 200)
@@ -113,7 +112,6 @@ class PostURLTest(TestCase):
     def test_username_post_id_edit_for_auth_user_post_author(self):
         """Страница '/author/1/edit/' доступна авторизованному пользователю,
         автору поста.
-        
         """
         response = self.authorized_client_author.get('/author/1/edit/')
         self.assertEqual(response.status_code, 200)
@@ -134,12 +132,14 @@ class PostURLTest(TestCase):
 
     def test_redirect_from_username_post_id_edit_for_anon(self):
         """Тест редиректа со страницы '/author/1/edit/' 
-        на страницу /author/1/ для авторизованного пользователя."""
+        на страницу /author/1/ для авторизованного пользователя.
+        """
         response = self.authorized_client_not_author.get('/author/1/edit/',
                                                          follow=True
-        )
+            )
         self.assertRedirects(
-            response, ('/author/1/')) 
+            response, ('/author/1/')
+        ) 
 
     def test_techonologies(self):
         """Тест ошибки сервера 404 для несуществующей страницы"""

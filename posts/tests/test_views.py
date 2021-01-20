@@ -30,7 +30,8 @@ class PostViewsTest(TestCase):
             slug='test_slug_1',
         )
 
-        small_gif = (b'\x47\x49\x46\x38\x39\x61\x02\x00'
+        small_gif = (
+            b'\x47\x49\x46\x38\x39\x61\x02\x00'
             b'\x01\x00\x80\x00\x00\x00\x00\x00'
             b'\xFF\xFF\xFF\x21\xF9\x04\x00\x00'
             b'\x00\x00\x00\x2C\x00\x00\x00\x00'
@@ -167,21 +168,20 @@ class PostViewsTest(TestCase):
                 response = self.authorized_client.get(
                     reverse('post', kwargs={'username': PostViewsTest.user,
                                             'post_id': post.id}
-                    )
+                        )
                 )
                 self.assertEqual(response.context.get('post'), post)      
 
     def test_username_post_id_edit_page_show_correct_context(self):
         """Шаблон new_post для редактирования сформирован с правильным
         контекстом.
-        
         """
         for post in Post.objects.all():
             with self.subTest(post=post):
                 response = self.authorized_client.get(
                     reverse('post_edit', 
-                    kwargs={'username': PostViewsTest.user, 'post_id': post.id}
-                    )
+                            kwargs={'username': PostViewsTest.user, 'post_id': post.id}
+                        )
                 )
         form_fields = {
             'group': forms.fields.ChoiceField,
@@ -208,7 +208,6 @@ class PostViewsTest(TestCase):
 
     def test_about_author_page_accessible_by_name(self):
         """URL, генерируемые при помощи имен about:author и 'about:tech', доступны.
-
         """
         for status_code in range(200, 201):
             with self.subTest(status_code=status_code):
@@ -224,7 +223,6 @@ class PostViewsTest(TestCase):
     def test_about_author_about_tech_pages_use_correct_template(self):
         """При запросе к about:tech применяется шаблон about/tech.html.
         При запросе к about:author применяется шаблон about/author.html.
-        
         """
         templates_pages_names = {
             'about/author.html': reverse('about:author'),
@@ -252,7 +250,7 @@ class PostViewsTest(TestCase):
         self.authorized_client.get(
             reverse('profile_follow', 
                     kwargs={'username': self.user_1.username}
-            )
+                )
         )
         users_followed_after = self.user.follower.count()
         self.assertEqual(users_followed_after, users_followed_before + 1)
@@ -262,13 +260,13 @@ class PostViewsTest(TestCase):
         self.authorized_client.get(
             reverse('profile_follow', 
                     kwargs={'username': self.user_1.username}
-            )
+                )
         )
         users_follower_before = self.user.follower.count()
         self.authorized_client.get(
             reverse("profile_unfollow",
                     kwargs={"username": self.user_1.username}
-            )
+                )
         )
         users_follower_after = self.user.follower.count()
         self.assertEqual(users_follower_after, users_follower_before - 1)
@@ -278,7 +276,7 @@ class PostViewsTest(TestCase):
         self.authorized_client.get(
             reverse("profile_follow", 
                     kwargs={"username": self.user_1.username}
-            )
+                )
         )
         Post.objects.create( 
             text='Текст поста', 
