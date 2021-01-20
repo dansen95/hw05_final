@@ -135,8 +135,7 @@ class PostURLTest(TestCase):
         на страницу /author/1/ для авторизованного пользователя.
         """
         response = self.authorized_client_not_author.get('/author/1/edit/',
-                                                         follow=True
-            )
+                                                         follow=True)
         self.assertRedirects(
             response, ('/author/1/')
         ) 
@@ -145,4 +144,3 @@ class PostURLTest(TestCase):
         """Тест ошибки сервера 404 для несуществующей страницы"""
         response = self.guest_client.get('/false_page/')
         self.assertEqual(response.status_code, 404)
-        

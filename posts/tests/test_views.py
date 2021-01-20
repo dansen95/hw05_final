@@ -167,10 +167,9 @@ class PostViewsTest(TestCase):
             with self.subTest(post=post):
                 response = self.authorized_client.get(
                     reverse('post', kwargs={'username': PostViewsTest.user,
-                                            'post_id': post.id}
-                        )
+                                            'post_id': post.id})
                 )
-                self.assertEqual(response.context.get('post'), post)      
+                self.assertEqual(response.context.get('post'), post)
 
     def test_username_post_id_edit_page_show_correct_context(self):
         """Шаблон new_post для редактирования сформирован с правильным
@@ -180,8 +179,8 @@ class PostViewsTest(TestCase):
             with self.subTest(post=post):
                 response = self.authorized_client.get(
                     reverse('post_edit', 
-                            kwargs={'username': PostViewsTest.user, 'post_id': post.id}
-                        )
+                            kwargs={'username': PostViewsTest.user, 
+                                    'post_id': post.id})
                 )
         form_fields = {
             'group': forms.fields.ChoiceField,
@@ -249,8 +248,7 @@ class PostViewsTest(TestCase):
         users_followed_before = self.user.follower.count()
         self.authorized_client.get(
             reverse('profile_follow', 
-                    kwargs={'username': self.user_1.username}
-                )
+                    kwargs={'username': self.user_1.username})
         )
         users_followed_after = self.user.follower.count()
         self.assertEqual(users_followed_after, users_followed_before + 1)
@@ -259,14 +257,12 @@ class PostViewsTest(TestCase):
         """authorized_client может отписываться"""
         self.authorized_client.get(
             reverse('profile_follow', 
-                    kwargs={'username': self.user_1.username}
-                )
+                    kwargs={'username': self.user_1.username})
         )
         users_follower_before = self.user.follower.count()
         self.authorized_client.get(
             reverse("profile_unfollow",
-                    kwargs={"username": self.user_1.username}
-                )
+                    kwargs={"username": self.user_1.username})
         )
         users_follower_after = self.user.follower.count()
         self.assertEqual(users_follower_after, users_follower_before - 1)
@@ -275,8 +271,7 @@ class PostViewsTest(TestCase):
         """Запись появляется в ленте подписчиков"""
         self.authorized_client.get(
             reverse("profile_follow", 
-                    kwargs={"username": self.user_1.username}
-                )
+                    kwargs={"username": self.user_1.username})
         )
         Post.objects.create( 
             text='Текст поста', 

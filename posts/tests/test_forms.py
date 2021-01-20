@@ -5,12 +5,11 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase
-from django.urls import reverse, resolve
+from django.urls import reverse
 
 from posts.forms import PostForm
 from posts.models import Group, Post
-from posts import views
-from urllib.parse import urlparse
+
 
 class PostCreateFormTests(TestCase):
     @classmethod
@@ -106,8 +105,7 @@ class PostCreateFormTests(TestCase):
             response,
             reverse('post', 
                     kwargs={'username': PostCreateFormTests.user,
-                            'post_id': PostCreateFormTests.post.id}
-            )
+                            'post_id': PostCreateFormTests.post.id})
         )
 
         self.assertTrue(Post.objects.filter(text='Новый текст').exists())
